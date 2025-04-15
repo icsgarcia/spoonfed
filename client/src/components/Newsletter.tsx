@@ -22,8 +22,12 @@ const Newsletter = () => {
             setIsSubscribed(true);
             setEmail("");
             setError("");
-        } catch (error) {
-            setError(error.message);
+        } catch (error: unknown) {
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "An unknown error occurred"
+            );
         } finally {
             setIsSubmitting(false);
         }

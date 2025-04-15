@@ -62,8 +62,12 @@ const RecipeDetailsPage = () => {
                 setSavedRecipes([...savedRecipes, recipe?._id || ""]);
                 toast.success("Recipe saved to your collection!");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: unknown) {
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "An unknown error occurred"
+            );
             toast.error("Error updating saved recipes");
         }
     };

@@ -109,7 +109,7 @@ const CreateRecipePage = () => {
 
         touchFields();
 
-        return formik.validateForm().then((errors: unknown) => {
+        return formik.validateForm().then((errors: Record<string, unknown>) => {
             const stepFieldErrors = {
                 1: [
                     "name",

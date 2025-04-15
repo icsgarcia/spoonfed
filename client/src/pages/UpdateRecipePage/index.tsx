@@ -123,7 +123,9 @@ const UpdateeRecipePage = () => {
                 3: ["instructions"],
             };
 
-            const hasStepErrors = Object.keys(errors).some((key) =>
+            const hasStepErrors = Object.keys(
+                errors as Record<string, unknown>
+            ).some((key) =>
                 stepFieldErrors[step as keyof typeof stepFieldErrors].includes(
                     key
                 )

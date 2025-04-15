@@ -18,7 +18,7 @@ const DeleteRecipeModal = ({
 
     const confirmDelete = async () => {
         setIsDeleting(true);
-        await handleDelete(recipe._id);
+        await handleDelete(recipe!._id);
         setIsDeleting(false);
     };
     return (
