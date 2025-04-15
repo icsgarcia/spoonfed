@@ -11,7 +11,12 @@ const MONGODB_URI = process.env.MONGODB_URI as string;
 
 const app: Express = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+        origin: "https://spoonfed-jr3xykhfd-ivancsgarcias-projects.vercel.app/",
+        credentials: true,
+    })
+);
 
 app.use("/auth", userRouter);
 app.use("/recipes", recipesRouter);
