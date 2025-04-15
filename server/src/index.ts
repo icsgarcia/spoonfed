@@ -13,7 +13,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(
     cors({
-        origin: "https://spoonfed-jr3xykhfd-ivancsgarcias-projects.vercel.app/",
+        origin: "https://spoonfed.vercel.app/",
         credentials: true,
     })
 );
