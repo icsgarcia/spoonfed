@@ -48,7 +48,7 @@ const StepTwoSection = ({
             </p>
 
             <div className="space-y-4">
-                {formik.values.ingredients.map((ingredient, index) => (
+                {formik.values.ingredients.map((_, index) => (
                     <div key={index} className="flex items-start gap-3">
                         <div className="flex-grow">
                             <div
