@@ -1,5 +1,5 @@
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
-import { FormikProps } from "formik";
+import { ErrorMessage, Field, FormikProps } from "formik";
 import { Recipe } from "../../../types/recipeTypes";
 
 interface StepTwoSectionProps {
@@ -47,7 +47,7 @@ const StepTwoSection = ({
             </p>
 
             <div className="space-y-4">
-                {formik.values.ingredients.map((ingredient, index) => (
+                {formik.values.ingredients.map((_, index) => (
                     <div key={index} className="flex items-start gap-3">
                         <div className="flex-grow">
                             <div
@@ -63,25 +63,22 @@ const StepTwoSection = ({
                                         {index + 1}
                                     </span>
                                 </div>
-                                <input
+                                <Field
                                     type="text"
-                                    value={ingredient}
-                                    onChange={(e) =>
-                                        handleIngredientChange(e, index)
-                                    }
-                                    onBlur={formik.handleBlur}
                                     name={`ingredients[${index}]`}
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => handleIngredientChange(e, index)}
+                                    onBlur={formik.handleBlur}
                                     placeholder="e.g., 2 cups flour, sifted"
                                     className="flex-1 px-4 py-3 focus:outline-none w-full"
                                 />
                             </div>
-                            {formik.touched.ingredients &&
-                                Array.isArray(formik.errors.ingredients) &&
-                                formik.errors.ingredients[index] && (
-                                    <div className="text-red-500 text-sm mt-1">
-                                        {formik.errors.ingredients[index]}
-                                    </div>
-                                )}
+                            <ErrorMessage
+                                component={"div"}
+                                name={`ingredients[${index}]`}
+                                className="text-sm text-red-600"
+                            />
                         </div>
                         <button
                             type="button"

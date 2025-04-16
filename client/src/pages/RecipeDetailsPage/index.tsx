@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 import Header from "../../components/Header";
-import { auth } from "../../firebase";
-import serverInstance from "../../services/serverInstance";
 import Footer from "../../components/Footer";
 import {
     FaBookmark,
@@ -19,144 +17,80 @@ import DetailsSection from "./components/DetailsSection";
 import IngredientsSection from "./components/IngredientsSection";
 import InstructionsSection from "./components/InstructionsSection";
 import SmallDetailBox from "./components/SmallDetailBox";
-import { Recipe } from "../../types/recipeTypes";
 import ChatWindow from "../../components/ChatWindow";
-import { customToast as toast } from "../../utils/toast";
+import useRecipe from "../../hooks/useRecipe";
+import { useAuth } from "../../context/AuthProvider";
+import useDeleteRecipe from "../../hooks/useDeleteRecipe";
+import useSavedRecipesId from "../../hooks/useSavedRecipesId";
+import { useSaveRecipeMutation } from "../../hooks/useToggleSaveRecipe";
+import LandingHeader from "../../components/LandingHeader";
 
 const RecipeDetailsPage = () => {
+    const { currentUser } = useAuth();
     const params = useParams();
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
+    const {
+        data: recipeData,
+        isFetching,
+        error,
+    } = useRecipe(params.id as string);
+    const { data: savedRecipesIdData } = useSavedRecipesId();
+    const deleteRecipeMutation = useDeleteRecipe();
+    const saveRecipeMutation = useSaveRecipeMutation();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [recipe, setRecipe] = useState<Recipe | null>(null);
-    const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
     const [isOwner, setIsOwner] = useState(false);
-    const [error, setError] = useState("");
+    const [isSaved, setIsSaved] = useState<boolean>();
 
     const handlePrint = () => {};
 
     const handleToggleSave = async () => {
-        try {
-            const token = await auth.currentUser?.getIdToken();
-            const isSaved = savedRecipes.includes(recipe?._id || "");
+        const newSaveState = !isSaved;
+        setIsSaved(newSaveState);
 
-            if (isSaved) {
-                await serverInstance.delete(
-                    `/recipes/saved-recipes/${auth.currentUser?.uid}/${recipe?._id}`,
-                    {
-                        headers: { authorization: `Bearer ${token}` },
-                    }
-                );
-                setSavedRecipes(
-                    savedRecipes.filter((id) => id !== recipe?._id)
-                );
-                toast.info("Recipe removed from your saved collection");
-            } else {
-                await serverInstance.put(
-                    "/recipes",
-                    { userId: auth.currentUser?.uid, recipeId: recipe?._id },
-                    {
-                        headers: { authorization: `Bearer ${token}` },
-                    }
-                );
-                setSavedRecipes([...savedRecipes, recipe?._id || ""]);
-                toast.success("Recipe saved to your collection!");
+        saveRecipeMutation.mutate(
+            { recipeId: recipeData?._id, isSaving: newSaveState },
+            {
+                onError: () => {
+                    setIsSaved(!newSaveState);
+                },
             }
-        } catch (error: unknown) {
-            setError(
-                error instanceof Error
-                    ? error.message
-                    : "An unknown error occurred"
-            );
-            toast.error("Error updating saved recipes");
-        }
+        );
     };
 
     const handleDelete = async (id: string) => {
-        try {
-            const token = await auth.currentUser?.getIdToken();
-
-            const response = await serverInstance.delete(`/recipes/${id}`, {
-                headers: { authorization: `Bearer ${token}` },
-            });
-            const data = response.data;
-            console.log(data);
-            navigate("/my-recipes");
-        } catch (error) {
-            console.error(error);
-        }
+        deleteRecipeMutation.mutate(id);
     };
 
     useEffect(() => {
-        const getRecipeById = async () => {
-            setIsLoading(true);
-            try {
-                const token = await auth.currentUser?.getIdToken();
-                const response = await serverInstance.get(
-                    `/recipes/recipe/${params.id}`,
-                    { headers: { authorization: `Bearer ${token}` } }
-                );
-                const data = response.data;
-                setRecipe(data);
-                setIsOwner(auth.currentUser?.uid === data.userId);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        getRecipeById();
-    }, [params.id]);
+        setIsOwner(recipeData?.userId === currentUser?.uid);
+    }, [recipeData]);
 
     useEffect(() => {
-        const getSavedRecipesId = async () => {
-            if (auth.currentUser) {
-                const token = await auth.currentUser?.getIdToken();
-                try {
-                    const response = await serverInstance.get(
-                        `/recipes/saved-recipes/ids/${auth.currentUser?.uid}`,
-                        {
-                            headers: {
-                                authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
-                    setSavedRecipes(response.data || []);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        };
-
-        getSavedRecipesId();
-    }, []);
+        setIsSaved(savedRecipesIdData?.includes(recipeData?._id));
+    }, [savedRecipesIdData, recipeData]);
 
     useEffect(() => {
         document.title = "Spoonfed | Recipe";
     }, []);
 
-    if (isLoading) {
+    if (isFetching) {
         return (
             <>
-                <Header />
+                {!currentUser ? <LandingHeader /> : <Header />}
                 <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <Loader loading={isLoading} />
-                        <p className="mt-4 text-gray-600">
-                            Loading recipe details...
-                        </p>
-                    </div>
+                    <Loader
+                        loading={isFetching}
+                        text="Loading recipe details..."
+                    />
                 </div>
                 <Footer />
             </>
         );
     }
 
-    if (error || !recipe) {
+    if (error || !recipeData) {
         return (
             <>
-                <Header />
+                {!currentUser ? <LandingHeader /> : <Header />}
                 <div className="min-h-screen flex items-center justify-center px-4">
                     <div className="text-center max-w-md">
                         <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
@@ -166,7 +100,7 @@ const RecipeDetailsPage = () => {
                             Recipe Not Found
                         </h2>
                         <p className="text-gray-600 mb-6">
-                            {error ||
+                            {error!.message ||
                                 "This recipe doesn't exist or has been removed."}
                         </p>
                         <NavLink
@@ -184,7 +118,7 @@ const RecipeDetailsPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <ChatWindow />
-            <Header />
+            {!currentUser ? <LandingHeader /> : <Header />}
 
             {/* Recipe Hero Section */}
             <section className="w-full bg-gradient-to-br from-primary-700 to-primary-800 relative overflow-hidden">
@@ -195,20 +129,22 @@ const RecipeDetailsPage = () => {
                     <div className="flex flex-col lg:flex-row items-center gap-6 text-white">
                         <div className="lg:w-1/2 flex flex-col items-start">
                             <div className="flex flex-wrap gap-2 mb-3">
-                                {recipe.tags?.slice(0, 3).map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
+                                {recipeData?.tags
+                                    ?.slice(0, 3)
+                                    .map((tag: string) => (
+                                        <span
+                                            key={tag}
+                                            className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
                             </div>
                             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
-                                {recipe.name}
+                                {recipeData?.name}
                             </h1>
                             <p className="text-white/80 mb-6 line-clamp-3">
-                                {recipe.description}
+                                {recipeData?.description}
                             </p>
                             <div className="flex flex-wrap gap-6 mb-6">
                                 <SmallDetailBox
@@ -217,8 +153,8 @@ const RecipeDetailsPage = () => {
                                     }
                                     title={"Total Time"}
                                     content={`${
-                                        recipe.prepTimeMinutes +
-                                        recipe.cookTimeMinutes
+                                        recipeData?.prepTimeMinutes +
+                                        recipeData?.cookTimeMinutes
                                     }${" "}
                                             mins`}
                                 />
@@ -227,21 +163,21 @@ const RecipeDetailsPage = () => {
                                         <FaUtensils className="text-secondary-300" />
                                     }
                                     title={"Difficulty"}
-                                    content={`${recipe.difficulty}`}
+                                    content={`${recipeData?.difficulty}`}
                                 />
                                 <SmallDetailBox
                                     icon={
                                         <FaLeaf className="text-secondary-300" />
                                     }
                                     title={"Cuisine"}
-                                    content={`${recipe.cuisine}`}
+                                    content={`${recipeData?.cuisine}`}
                                 />
                             </div>
                             <div className="flex flex-wrap gap-3">
                                 {isOwner && (
                                     <>
                                         <NavLink
-                                            to={`/recipe/${recipe._id}/edit`}
+                                            to={`/recipe/${recipeData?._id}/edit`}
                                             className="flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg transition-colors"
                                         >
                                             <FaEdit />
@@ -258,26 +194,30 @@ const RecipeDetailsPage = () => {
                                         </button>
                                     </>
                                 )}
-                                <button
-                                    onClick={handleToggleSave}
-                                    className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-colors ${
-                                        savedRecipes.includes(recipe._id)
-                                            ? "bg-secondary-600 hover:bg-secondary-700 text-white"
-                                            : "bg-white text-primary-700 hover:bg-gray-100"
-                                    }`}
-                                >
-                                    {savedRecipes.includes(recipe._id) ? (
-                                        <>
-                                            <FaBookmark />
-                                            <span>Saved</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FaBookmark />
-                                            <span>Save Recipe</span>
-                                        </>
-                                    )}
-                                </button>
+                                {currentUser && (
+                                    <button
+                                        onClick={handleToggleSave}
+                                        className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-colors ${
+                                            savedRecipesIdData.includes(
+                                                recipeData?._id
+                                            )
+                                                ? "bg-secondary-600 hover:bg-secondary-700 text-white"
+                                                : "bg-white text-primary-700 hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        {isSaved ? (
+                                            <>
+                                                <FaBookmark />
+                                                <span>Saved</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaBookmark />
+                                                <span>Save Recipe</span>
+                                            </>
+                                        )}
+                                    </button>
+                                )}
 
                                 <button
                                     onClick={handlePrint}
@@ -292,10 +232,10 @@ const RecipeDetailsPage = () => {
                             <div className="w-full max-w-md rounded-xl overflow-hidden shadow-lg border-4 border-white/20">
                                 <img
                                     src={
-                                        recipe.image ||
+                                        recipeData?.image ||
                                         "/images/recipe-placeholder.jpg"
                                     }
-                                    alt={recipe.name}
+                                    alt={recipeData?.name}
                                     className="w-full h-80 object-cover"
                                     onError={(e) => {
                                         e.currentTarget.src =
@@ -313,8 +253,8 @@ const RecipeDetailsPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Nutrition & Details */}
                     <DetailsSection
-                        recipe={recipe}
-                        savedRecipes={savedRecipes}
+                        recipe={recipeData}
+                        savedRecipes={savedRecipesIdData}
                         handlePrint={handlePrint}
                         handleToggleSave={handleToggleSave}
                     />
@@ -322,8 +262,8 @@ const RecipeDetailsPage = () => {
                     {/* Right Column - Ingredients & Instructions */}
                     <div className="lg:col-span-2">
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-                            <IngredientsSection recipe={recipe} />
-                            <InstructionsSection recipe={recipe} />
+                            <IngredientsSection recipe={recipeData} />
+                            <InstructionsSection recipe={recipeData} />
                         </div>
                     </div>
                 </div>
@@ -332,7 +272,7 @@ const RecipeDetailsPage = () => {
             {showDeleteModal && (
                 <DeleteRecipeModal
                     handleDelete={handleDelete}
-                    recipe={recipe}
+                    recipe={recipeData}
                     setShowDeleteModal={setShowDeleteModal}
                 />
             )}

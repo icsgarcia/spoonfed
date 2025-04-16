@@ -22,7 +22,7 @@ const SavedRecipePage = () => {
     const [page, setPage] = useState(1);
     const [showFilters, setShowFilters] = useState(false);
     const { data: savedRecipesIdData } = useSavedRecipesId();
-    const { data: savedRecipesData, isLoading } = useSavedRecipes(
+    const { data: savedRecipesData, isFetching } = useSavedRecipes(
         page,
         debouncedQuery,
         mealType,
@@ -88,13 +88,11 @@ const SavedRecipePage = () => {
             </div>
 
             <div className="container mx-auto px-4 pb-16">
-                {isLoading ? (
-                    <div className="flex flex-col items-center py-16">
-                        <Loader loading={isLoading} />
-                        <p className="text-gray-600 mt-4">
-                            Finding your saved recipes...
-                        </p>
-                    </div>
+                {isFetching ? (
+                    <Loader
+                        loading={isFetching}
+                        text="Searching for saved recipes..."
+                    />
                 ) : savedRecipesData.recipes.length > 0 ? (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">

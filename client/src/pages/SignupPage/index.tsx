@@ -71,13 +71,13 @@ const SignupPage = () => {
                             confirmPassword: "",
                         }}
                         validationSchema={SignupSchema}
-                        validateOnBlur={true}
+                        validateOnBlur={false}
                         validateOnChange={false}
                         onSubmit={(values) =>
                             handleSignup({ values, setIsLoading, navigate })
                         }
                     >
-                        {({ isValid, isSubmitting }) => (
+                        {({ isSubmitting }) => (
                             <Form method="post" className="flex flex-col gap-4">
                                 <AuthInputBox
                                     htmlFor="username"
@@ -121,7 +121,7 @@ const SignupPage = () => {
 
                                 <button
                                     type="submit"
-                                    disabled={!isValid || isSubmitting}
+                                    disabled={isSubmitting}
                                     className="bg-primary-600 text-white border rounded-lg py-3.5 mt-2 font-medium hover:bg-primary-700 transition-colors shadow-sm disabled:opacity-70 flex justify-center items-center"
                                 >
                                     {isSubmitting ? (

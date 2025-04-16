@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import serverInstance from "../services/serverInstance";
 import { useAuth } from "../context/AuthProvider";
+import { toast } from "react-toastify";
 
 export function useSaveRecipeMutation() {
     const { currentUser } = useAuth();
@@ -17,21 +18,32 @@ export function useSaveRecipeMutation() {
             const token = await currentUser?.getIdToken();
 
             if (isSaving) {
-                return serverInstance.put(
+                const { data } = await serverInstance.put(
                     "/recipes",
                     { userId: currentUser?.uid, recipeId },
                     { headers: { authorization: `Bearer ${token}` } }
                 );
+                return { ...data, isSaving };
             } else {
-                return serverInstance.delete(
+                const { data } = await serverInstance.delete(
                     `/recipes/saved-recipes/${currentUser?.uid}/${recipeId}`,
                     { headers: { authorization: `Bearer ${token}` } }
                 );
+                return { ...data, isSaving };
             }
         },
-        onSuccess: () => {
+        onSuccess: (result) => {
             queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
             queryClient.invalidateQueries({ queryKey: ["savedRecipesId"] });
+
+            if (result.isSaving) {
+                toast.success("Recipe saved to your collection!");
+            } else {
+                toast.info("Recipe removed from your saved collection");
+            }
+        },
+        onError: () => {
+            toast.error("Error updating saved recipes");
         },
     });
 

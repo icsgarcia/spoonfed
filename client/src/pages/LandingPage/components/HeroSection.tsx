@@ -4,10 +4,11 @@ import { NavLink } from "react-router";
 import { HashLink } from "react-router-hash-link";
 import { Recipe } from "../../../types/recipeTypes";
 import useFeaturedRecipes from "../../../hooks/useFeaturedRecipes";
+import Loader from "../../../components/Loader";
 
 const HeroSection = ({ discoverRecipesId }: { discoverRecipesId: string }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const { data: featuredRecipesData } = useFeaturedRecipes();
+    const { data: featuredRecipesData, isFetching } = useFeaturedRecipes();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -82,46 +83,51 @@ const HeroSection = ({ discoverRecipesId }: { discoverRecipesId: string }) => {
                                 }%)`,
                             }}
                         >
-                            {featuredRecipesData?.map(
-                                (recipe: Recipe, index: number) => (
-                                    <div
-                                        key={index}
-                                        className="absolute top-0 h-full"
-                                        style={{
-                                            width: `${
-                                                100 /
-                                                featuredRecipesData?.length
-                                            }%`,
-                                            left: `${
-                                                index *
-                                                (100 /
-                                                    featuredRecipesData?.length)
-                                            }%`,
-                                        }}
-                                    >
-                                        <img
-                                            src={recipe.image}
-                                            alt={recipe.name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-                                            <div className="flex gap-2 mb-2">
-                                                {recipe.tags.map(
-                                                    (tag: string) => (
-                                                        <span
-                                                            key={tag}
-                                                            className="text-xs bg-white/20 text-white px-2 py-1 rounded-full"
-                                                        >
-                                                            {tag}
-                                                        </span>
-                                                    )
-                                                )}
+                            {isFetching ? (
+                                <Loader color="white" loading={isFetching} />
+                            ) : (
+                                featuredRecipesData?.map(
+                                    (recipe: Recipe, index: number) => (
+                                        <div
+                                            key={index}
+                                            className="absolute top-0 h-full"
+                                            style={{
+                                                width: `${
+                                                    100 /
+                                                    featuredRecipesData?.length
+                                                }%`,
+                                                left: `${
+                                                    index *
+                                                    (100 /
+                                                        featuredRecipesData?.length)
+                                                }%`,
+                                            }}
+                                        >
+                                            <img
+                                                src={recipe.image}
+                                                alt={recipe.name}
+                                                className="w-full h-full object-cover"
+                                            />
+
+                                            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+                                                <div className="flex gap-2 mb-2">
+                                                    {recipe.tags.map(
+                                                        (tag: string) => (
+                                                            <span
+                                                                key={tag}
+                                                                className="text-xs bg-white/20 text-white px-2 py-1 rounded-full"
+                                                            >
+                                                                {tag}
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">
+                                                    {recipe.name}
+                                                </h3>
                                             </div>
-                                            <h3 className="text-lg font-bold text-white">
-                                                {recipe.name}
-                                            </h3>
                                         </div>
-                                    </div>
+                                    )
                                 )
                             )}
                         </div>

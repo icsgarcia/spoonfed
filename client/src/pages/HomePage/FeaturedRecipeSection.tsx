@@ -6,12 +6,19 @@ import NoFeaturedRecipeSection from "./components/NoFeaturedRecipeSection";
 import Loader from "../../components/Loader";
 
 const FeaturedRecipeSection = () => {
-    const { data: featuredRecipesData, isLoading } = useFeaturedRecipes();
+    const { data: featuredRecipesData, isFetching } = useFeaturedRecipes();
 
-    if (isLoading) {
-        return <Loader loading={isLoading} />;
+    if (isFetching) {
+        return (
+            <>
+                <Loader
+                    loading={isFetching}
+                    text="Loading featured recipes..."
+                />
+            </>
+        );
     }
-    return featuredRecipesData ? (
+    return featuredRecipesData.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-lg h-[500px] relative group">
                 <NavLink

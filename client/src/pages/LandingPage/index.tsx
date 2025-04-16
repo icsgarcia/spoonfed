@@ -16,7 +16,7 @@ const LandingPage = () => {
     const [mealType, setMealType] = useState<string>("");
     const [debouncedQuery, setDebouncedQuery] = useState<string>("");
     const [page, setPage] = useState<number>(1);
-    const { data: publicRecipesData, isLoading } = usePublicRecipes(
+    const { data: publicRecipesData, isFetching } = usePublicRecipes(
         page,
         debouncedQuery,
         mealType,
@@ -48,7 +48,7 @@ const LandingPage = () => {
             />
 
             <RecipesSection
-                isLoading={isLoading}
+                isFetching={isFetching}
                 recipes={publicRecipesData?.recipes}
                 setPage={setPage}
                 pageCount={publicRecipesData?.pagination.pageCount}

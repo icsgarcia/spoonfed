@@ -60,7 +60,7 @@ export const handleSignup = async ({
         const data = response.data;
         console.log(data);
 
-        toast.success("Registered successfully");
+        toast.success("Account created successfully! Welcome to Spoonfed 🎉");
 
         setTimeout(() => {
             navigate("/login");
@@ -98,7 +98,7 @@ export const handleLogin = async ({
             throw Error("User not found");
         }
 
-        toast.success("Logged in successfully");
+        toast.success("Welcome back! You've successfully logged in.");
         setTimeout(() => {
             navigate("/home");
         }, 1000);
@@ -153,7 +153,9 @@ export const googleSignIn = async ({
             email: user.email,
         });
 
-        toast.success("Logged in successfully");
+        toast.success(
+            "Signed up successfully with Google! Welcome to Spoonfed 🎉"
+        );
         setTimeout(() => {
             navigate(from);
         }, 1000);

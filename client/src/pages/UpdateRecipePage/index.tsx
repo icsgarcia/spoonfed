@@ -54,11 +54,11 @@ const UpdateeRecipePage = () => {
                 headers: { authorization: `Bearer ${token}` },
             });
 
-            toast.success("Recipe Update successfully");
+            toast.success("Recipe updated successfully.");
             navigate(-1);
         } catch (error) {
             console.error(error);
-            toast.error("Failed to update recipe. Please try again.");
+            toast.error("Failed to update the recipe. Please try again.");
         }
     };
 

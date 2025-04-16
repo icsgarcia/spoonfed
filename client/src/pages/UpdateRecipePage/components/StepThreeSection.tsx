@@ -1,5 +1,5 @@
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
-import { FormikProps } from "formik";
+import { ErrorMessage, Field, FormikProps } from "formik";
 import { Recipe } from "../../../types/recipeTypes";
 import LoadingSVG from "../../../components/LoadingSVG";
 
@@ -47,7 +47,7 @@ const StepThreeSection = ({ formik, prevStep }: StepThreeSectionProps) => {
 
             {/* Instructions */}
             <div className="space-y-4">
-                {formik.values.instructions.map((instruction, index) => (
+                {formik.values.instructions.map((_, index) => (
                     <div key={index} className="flex items-start gap-3">
                         <div className="flex-grow">
                             <div className="flex flex-col">
@@ -62,25 +62,23 @@ const StepThreeSection = ({ formik, prevStep }: StepThreeSectionProps) => {
                                             : "border-gray-300 focus-within:ring-primary-500 focus-within:border-primary-500"
                                     }`}
                                 >
-                                    <textarea
-                                        value={instruction}
-                                        onChange={(e) =>
-                                            handleInstructionChange(e, index)
-                                        }
+                                    <Field
+                                        component="textarea"
+                                        onChange={(
+                                            e: React.ChangeEvent<HTMLTextAreaElement>
+                                        ) => handleInstructionChange(e, index)}
                                         onBlur={formik.handleBlur}
                                         name={`instructions[${index}]`}
                                         placeholder="Describe this step..."
                                         rows={3}
                                         className="flex-1 px-4 py-3 focus:outline-none w-full resize-none"
-                                    ></textarea>
+                                    />
                                 </div>
-                                {formik.touched.instructions &&
-                                    Array.isArray(formik.errors.instructions) &&
-                                    formik.errors.instructions[index] && (
-                                        <div className="text-red-500 text-sm mt-1">
-                                            {formik.errors.instructions[index]}
-                                        </div>
-                                    )}
+                                <ErrorMessage
+                                    component={"div"}
+                                    name={`instructions[${index}]`}
+                                    className="text-red-500 mt-1 text-sm"
+                                />
                             </div>
                         </div>
                         <button

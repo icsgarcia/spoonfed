@@ -57,11 +57,15 @@ const CreateRecipePage = () => {
                 }
             );
 
-            toast.success("Recipe created successfully");
-            navigate(-1);
+            toast.success(
+                "Recipe created successfully! Your delicious dish is now live 🍽️"
+            );
+            navigate("/my-recipes");
         } catch (error) {
             console.error(error);
-            toast.error("Failed to create recipe. Please try again.");
+            toast.error(
+                "Something went wrong while saving your recipe. Please try again."
+            );
         }
     };
 
@@ -147,7 +151,9 @@ const CreateRecipePage = () => {
                 }
             }
         } else {
-            toast.error("Please fix validation errors before continuing");
+            toast.error(
+                "Oops! Some fields need your attention before you can continue."
+            );
         }
     };
 
@@ -173,7 +179,7 @@ const CreateRecipePage = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={RecipeSchema}
-                        validateOnBlur={true}
+                        validateOnBlur={false}
                         validateOnChange={false}
                         onSubmit={handleSubmit}
                     >

@@ -91,7 +91,7 @@ const LoginPage = () => {
                             password: "",
                         }}
                         validationSchema={LoginSchema}
-                        validateOnBlur={true}
+                        validateOnBlur={false}
                         validateOnChange={false}
                         onSubmit={(values) =>
                             handleLogin({
@@ -103,7 +103,7 @@ const LoginPage = () => {
                             })
                         }
                     >
-                        {({ isSubmitting, isValid }) => (
+                        {({ isSubmitting }) => (
                             <Form className="space-y-5">
                                 <AuthInputBox
                                     htmlFor={"email"}
@@ -155,7 +155,7 @@ const LoginPage = () => {
 
                                 <button
                                     type="submit"
-                                    disabled={isSubmitting || !isValid}
+                                    disabled={isSubmitting}
                                     className="w-full mt-4 bg-primary-600 text-white py-3.5 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-70 font-medium shadow-sm flex justify-center items-center"
                                 >
                                     {isSubmitting ? (

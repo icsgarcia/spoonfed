@@ -1,23 +1,24 @@
-import { CSSProperties } from "react";
 import MoonLoader from "react-spinners/MoonLoader";
 
-const override: CSSProperties = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "green",
-};
-
-export const Loader = ({ loading }: { loading: boolean }) => {
+export const Loader = ({
+    loading,
+    color = "green",
+    text,
+}: {
+    loading: boolean;
+    color?: string;
+    text?: string;
+}) => {
     return (
-        <>
+        <div className="w-full h-full flex flex-col justify-center items-center gap-2">
             <MoonLoader
                 role="status"
                 loading={loading}
-                cssOverride={override}
-                color="green"
+                color={color}
                 size={150}
             />
-        </>
+            <p className="text-primary-800">{text}</p>
+        </div>
     );
 };
 

@@ -66,7 +66,6 @@ const StepTwoSection = ({
                                 </div>
                                 <Field
                                     type="text"
-                                    value={ingredient}
                                     onChange={(
                                         e: ChangeEvent<HTMLInputElement>
                                     ) => handleIngredientChange(e, index)}
@@ -78,7 +77,7 @@ const StepTwoSection = ({
                             </div>
                             <ErrorMessage
                                 component={"div"}
-                                name={"ingredients"}
+                                name={`ingredients[${index}]`}
                                 className="mt-1 text-red-500"
                             />
                         </div>

@@ -23,7 +23,7 @@ const MyRecipesPage = () => {
     const [page, setPage] = useState(1);
     const [showFilters, setShowFilters] = useState(false);
     const { data: savedRecipesIdData } = useSavedRecipesId();
-    const { data: createdRecipesData, isLoading } = useCreatedRecipes(
+    const { data: createdRecipesData, isFetching } = useCreatedRecipes(
         page,
         debouncedQuery,
         mealType,
@@ -98,13 +98,11 @@ const MyRecipesPage = () => {
                 />
 
                 {/* Recipe Cards */}
-                {isLoading ? (
-                    <div className="py-20 flex flex-col items-center">
-                        <Loader loading={isLoading} />
-                        <p className="text-center mt-4 text-gray-600">
-                            Loading your recipes...
-                        </p>
-                    </div>
+                {isFetching ? (
+                    <Loader
+                        loading={isFetching}
+                        text="Searching for your recipes..."
+                    />
                 ) : createdRecipesData.recipes.length > 0 ? (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

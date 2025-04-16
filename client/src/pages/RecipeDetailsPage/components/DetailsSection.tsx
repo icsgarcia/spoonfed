@@ -1,6 +1,7 @@
 import { FaShareAlt } from "react-icons/fa";
 import { FaBookmark, FaClock, FaPrint } from "react-icons/fa6";
 import { Recipe } from "../../../types/recipeTypes";
+import { useAuth } from "../../../context/AuthProvider";
 
 interface DetailsSectionProps {
     recipe: Recipe;
@@ -15,6 +16,7 @@ const DetailsSection = ({
     handlePrint,
     handleToggleSave,
 }: DetailsSectionProps) => {
+    const { currentUser } = useAuth();
     return (
         <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-4">
@@ -94,16 +96,18 @@ const DetailsSection = ({
                         <button className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">
                             <FaShareAlt />
                         </button>
-                        <button
-                            className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
-                                savedRecipes.includes(recipe._id)
-                                    ? "bg-secondary-100 text-secondary-600"
-                                    : "bg-gray-100 hover:bg-gray-200 text-gray-600"
-                            }`}
-                            onClick={handleToggleSave}
-                        >
-                            <FaBookmark />
-                        </button>
+                        {currentUser && (
+                            <button
+                                className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
+                                    savedRecipes.includes(recipe._id)
+                                        ? "bg-secondary-100 text-secondary-600"
+                                        : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+                                }`}
+                                onClick={handleToggleSave}
+                            >
+                                <FaBookmark />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

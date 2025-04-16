@@ -7,7 +7,7 @@ import RecipeCard from "../../../components/RecipeCard";
 import NoRecipesFoundSection from "../../../components/NoRecipesFoundSection";
 
 interface RecipesSectionProps {
-    isLoading: boolean;
+    isFetching: boolean;
     recipes: Recipe[];
     pageCount: number;
     page: number;
@@ -18,7 +18,7 @@ interface RecipesSectionProps {
 }
 
 const RecipesSection = ({
-    isLoading,
+    isFetching,
     recipes,
     pageCount,
     page,
@@ -29,13 +29,8 @@ const RecipesSection = ({
 }: RecipesSectionProps) => {
     return (
         <section className="container mx-auto px-4 py-4">
-            {isLoading ? (
-                <div className="flex flex-col items-center py-12">
-                    <Loader loading={isLoading} />
-                    <p className="text-center mt-4 text-gray-600">
-                        Finding delicious recipes...
-                    </p>
-                </div>
+            {isFetching ? (
+                <Loader loading={isFetching} text="Searching for recipes..." />
             ) : recipes.length > 0 ? (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

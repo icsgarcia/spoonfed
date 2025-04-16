@@ -24,7 +24,7 @@ const HomePage = () => {
     const [showFilters, setShowFilters] = useState(false);
     const [debouncedQuery, setDebouncedQuery] = useState<string>("");
     const [page, setPage] = useState<number>(1);
-    const { data: publicRecipesData, isLoading } = usePublicRecipes(
+    const { data: publicRecipesData, isFetching } = usePublicRecipes(
         page,
         debouncedQuery,
         mealType,
@@ -133,13 +133,11 @@ const HomePage = () => {
                     </div>
 
                     {/* Recipe Grid */}
-                    {isLoading ? (
-                        <div className="flex flex-col items-center py-16">
-                            <Loader loading={isLoading} />
-                            <p className="text-center mt-4 text-gray-600">
-                                Finding delicious recipes...
-                            </p>
-                        </div>
+                    {isFetching ? (
+                        <Loader
+                            loading={isFetching}
+                            text="Searching for recipes..."
+                        />
                     ) : publicRecipesData?.recipes.length > 0 ? (
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
