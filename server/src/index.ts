@@ -11,9 +11,18 @@ const MONGODB_URI = process.env.MONGODB_URI as string;
 
 const app: Express = express();
 app.use(express.json());
+
+const allowedOrigins = ["https://spoonfed.vercel.app", "http://localhost:5173"];
+
 app.use(
     cors({
-        origin: "https://spoonfed.vercel.app",
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );
