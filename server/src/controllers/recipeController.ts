@@ -482,7 +482,7 @@ export const getRecipeByChat = async (
                 { cuisine: searchRegex },
                 { mealType: searchRegex },
             ],
-        }).limit(5);
+        });
         res.json(recipes);
     } catch (error) {
         console.error(error);
