@@ -1,79 +1,126 @@
-import { NavLink } from "react-router";
 import SpoonfedLogo from "/images/spoonfed-logo-removebg-preview.png";
-import { FaLeaf, FaUtensils } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router";
 
 const LandingHeader = () => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 20) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
+            setIsScrolled(window.scrollY > 20);
         };
 
         window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 w-full py-3 transition-all duration-300 backdrop-blur-sm ${
-                isScrolled ? "bg-white/95 shadow-md py-2" : "bg-white/80 py-4"
+            className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+                isScrolled
+                    ? "bg-white shadow-lg py-2"
+                    : "bg-white/95 backdrop-blur-sm py-4"
             }`}
         >
-            <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between">
+                    {/* Logo Section */}
                     <NavLink
                         to="/"
-                        className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+                        className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity"
+                        onClick={closeMobileMenu}
                     >
                         <div className="relative">
                             <img
                                 src={SpoonfedLogo}
                                 alt="Spoonfed Logo"
-                                className="w-12 h-12 object-contain"
+                                className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                             />
-                            {!isScrolled && (
-                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary-500 rounded-full border-2 border-white animate-pulse"></div>
-                            )}
+                            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                         </div>
                         <div>
-                            <h1 className="font-dancing-script text-3xl font-bold text-primary-800">
+                            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">
                                 Spoonfed
                             </h1>
-                            <div className="flex items-center gap-1 -mt-1">
-                                <span className="text-xs text-primary-600 font-medium tracking-wider">
-                                    RECIPE APP
-                                </span>
-                                <span className="block w-1 h-1 rounded-full bg-secondary-500"></span>
-                                <span className="text-xs text-gray-500">
-                                    Taste the difference
-                                </span>
-                            </div>
+                            <p className="text-xs text-gray-500 -mt-0.5">
+                                Fresh recipes daily
+                            </p>
                         </div>
                     </NavLink>
 
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:flex items-center gap-4">
                         <NavLink
                             to="/login"
-                            className="relative overflow-hidden group px-6 py-2 rounded-lg font-medium text-primary-700 border-2 border-primary-500 hover:border-primary-600 transition-all flex items-center justify-center"
+                            className="px-6 py-2.5 text-gray-700 font-medium rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition-all duration-200"
                         >
-                            <span className="absolute inset-0 w-full h-full bg-primary-100 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                            <FaUtensils className="mr-2 relative z-10 text-primary-600" />
-                            <span className="relative z-10">Log In</span>
+                            Login
                         </NavLink>
-
                         <NavLink
                             to="/signup"
-                            className="px-6 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center"
+                            className="px-6 py-2.5 text-white font-medium rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                         >
-                            <FaLeaf className="mr-2 text-secondary-300" />
-                            <span>Sign Up</span>
+                            Sign Up
+                        </NavLink>
+                    </nav>
+
+                    {/* Mobile Hamburger Button */}
+                    <button
+                        onClick={toggleMobileMenu}
+                        className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-colors"
+                        aria-label="Toggle mobile menu"
+                    >
+                        {isMobileMenuOpen ? (
+                            <FaTimes className="w-6 h-6" />
+                        ) : (
+                            <FaBars className="w-6 h-6" />
+                        )}
+                    </button>
+                </div>
+
+                {/* Mobile Menu Dropdown */}
+                <div
+                    className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+                        isMobileMenuOpen
+                            ? "max-h-48 opacity-100 mt-4"
+                            : "max-h-0 opacity-0"
+                    }`}
+                >
+                    <div className="flex flex-col gap-3 py-4 border-t border-gray-200">
+                        <NavLink
+                            to="/login"
+                            onClick={closeMobileMenu}
+                            className="w-full px-6 py-3 text-center text-gray-700 font-medium rounded-lg border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 transition-all duration-200"
+                        >
+                            Login
+                        </NavLink>
+                        <NavLink
+                            to="/signup"
+                            onClick={closeMobileMenu}
+                            className="w-full px-6 py-3 text-center text-white font-medium rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-md hover:shadow-lg transition-all duration-200"
+                        >
+                            Sign Up
                         </NavLink>
                     </div>
                 </div>

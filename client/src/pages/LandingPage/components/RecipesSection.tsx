@@ -28,34 +28,47 @@ const RecipesSection = ({
     setPage,
 }: RecipesSectionProps) => {
     return (
-        <section className="container mx-auto px-4 py-4">
-            {isFetching ? (
-                <Loader loading={isFetching} text="Searching for recipes..." />
-            ) : recipes.length > 0 ? (
-                <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {recipes.map((recipe) => (
-                            <NavLink to={`/recipe/${recipe._id}`}>
-                                <RecipeCard recipe={recipe} />
-                            </NavLink>
-                        ))}
-                    </div>
-
-                    <div className="mt-12">
-                        <Pagination
-                            setPage={setPage}
-                            pageCount={pageCount}
-                            page={page}
+        <section className="py-12 bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                {isFetching ? (
+                    <div className="flex justify-center items-center min-h-[400px]">
+                        <Loader
+                            loading={isFetching}
+                            text="Searching for recipes..."
                         />
                     </div>
-                </>
-            ) : (
-                <NoRecipesFoundSection
-                    setQuery={setQuery}
-                    setCuisine={setCuisine}
-                    setMealType={setMealType}
-                />
-            )}
+                ) : recipes.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                            {recipes.map((recipe) => (
+                                <NavLink
+                                    key={recipe._id}
+                                    to={`/recipe/${recipe._id}`}
+                                    className="transform hover:-translate-y-2 transition-transform duration-300"
+                                >
+                                    <RecipeCard recipe={recipe} />
+                                </NavLink>
+                            ))}
+                        </div>
+
+                        {pageCount > 1 && (
+                            <div className="mt-12 flex justify-center">
+                                <Pagination
+                                    setPage={setPage}
+                                    pageCount={pageCount}
+                                    page={page}
+                                />
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <NoRecipesFoundSection
+                        setQuery={setQuery}
+                        setCuisine={setCuisine}
+                        setMealType={setMealType}
+                    />
+                )}
+            </div>
         </section>
     );
 };

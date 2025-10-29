@@ -6,7 +6,7 @@ const useCuisines = () => {
         queryKey: ["cuisines"],
         queryFn: async () => {
             const { data } = await serverInstance.get("/recipes/get-cuisines");
-            return data;
+            return data.cuisinesArray;
         },
     });
 };

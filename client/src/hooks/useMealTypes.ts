@@ -8,7 +8,7 @@ const useMealTypes = () => {
             const { data } = await serverInstance.get(
                 "/recipes/get-meal-types"
             );
-            return data;
+            return data.mealTypesArray;
         },
     });
 };
