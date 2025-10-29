@@ -1,13 +1,10 @@
-import Newsletter from "../../components/Newsletter";
 import { useEffect, useState } from "react";
-import Footer from "../../components/Footer";
 import LandingHeader from "../../components/LandingHeader";
-import CTASection from "./components/CTASection";
-import FeaturedRecipesSection from "./components/FeaturedRecipesSection";
 import SearchAndFilter from "./components/SearchAndFilter";
 import HeroSection from "./components/HeroSection";
 import usePublicRecipes from "../../hooks/usePublicRecipes";
 import RecipesSection from "./components/RecipesSection";
+import Footer from "./components/Footer";
 
 const LandingPage = () => {
     const discoverRecipesId = "why-spoonfed";
@@ -46,7 +43,6 @@ const LandingPage = () => {
                 setMealType={setMealType}
                 setCuisine={setCuisine}
             />
-
             <RecipesSection
                 isFetching={isFetching}
                 recipes={publicRecipesData?.recipes}
@@ -57,10 +53,6 @@ const LandingPage = () => {
                 setCuisine={setCuisine}
                 setMealType={setMealType}
             />
-            <FeaturedRecipesSection discoverRecipesId={discoverRecipesId} />
-
-            <CTASection />
-            <Newsletter />
             <Footer />
         </div>
     );
