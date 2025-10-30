@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import LandingHeader from "../../components/LandingHeader";
-import SearchAndFilter from "./components/SearchAndFilter";
+import SearchAndFilter from "../../components/SearchAndFilter";
 import HeroSection from "./components/HeroSection";
 import usePublicRecipes from "../../hooks/usePublicRecipes";
 import RecipesSection from "./components/RecipesSection";
@@ -38,6 +38,7 @@ const LandingPage = () => {
             <LandingHeader />
             <HeroSection discoverRecipesId={discoverRecipesId} />
             <SearchAndFilter
+                title="Find your perfect recipe"
                 query={query}
                 setQuery={setQuery}
                 setMealType={setMealType}
