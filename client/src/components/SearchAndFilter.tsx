@@ -1,70 +1,61 @@
-import { Dispatch, SetStateAction } from "react";
-import { FaFilter, FaMagnifyingGlass } from "react-icons/fa6";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import MealTypeSelect from "./MealTypeSelect";
 import CuisineSelect from "./CuisineSelect";
+import { Dispatch, SetStateAction } from "react";
 
 interface SearchAndFilterProps {
-    placeholder: string;
+    title?: string;
     query: string;
     setQuery: Dispatch<SetStateAction<string>>;
     setMealType: Dispatch<SetStateAction<string>>;
     setCuisine: Dispatch<SetStateAction<string>>;
-    showFilters: boolean;
-    toggleFilters: () => void;
 }
 
 const SearchAndFilter = ({
-    placeholder,
+    title,
     query,
     setQuery,
     setMealType,
     setCuisine,
-    showFilters,
-    toggleFilters,
 }: SearchAndFilterProps) => {
     return (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-                <div className="flex-1">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder={placeholder}
-                            className="w-full py-3 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                        />
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
-                            <FaMagnifyingGlass />
+        <section className="bg-white py-8" id="why-spoonfed">
+            <div className="container mx-auto px-4">
+                <div className="max-w-5xl mx-auto bg-gradient-to-br from-green-50 to-white rounded-2xl shadow-xl p-6 sm:p-8 border border-green-100">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
+                        {title}
+                    </h2>
+
+                    <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
+                        {/* Search Input */}
+                        <div className="w-full lg:flex-1">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    placeholder="Search for recipes..."
+                                    className="w-full pl-4 pr-12 py-3.5 text-gray-700 bg-white border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all duration-200"
+                                />
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <FaMagnifyingGlass className="w-5 h-5" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Filters */}
+                        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto lg:min-w-[400px]">
+                            <div className="w-full sm:flex-1">
+                                <MealTypeSelect setMealType={setMealType} />
+                            </div>
+                            <div className="w-full sm:flex-1">
+                                <CuisineSelect setCuisine={setCuisine} />
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button
-                    onClick={toggleFilters}
-                    className="flex items-center justify-center gap-2 px-5 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-gray-700"
-                >
-                    <FaFilter className="text-primary-600" />
-                    {showFilters ? "Hide Filters" : "Show Filters"}
-                </button>
             </div>
-
-            {showFilters && (
-                <div className="pt-4 mt-4 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Filter by Meal Type
-                        </label>
-                        <MealTypeSelect setMealType={setMealType} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Filter by Cuisine
-                        </label>
-                        <CuisineSelect setCuisine={setCuisine} />
-                    </div>
-                </div>
-            )}
-        </div>
+        </section>
     );
 };
 

@@ -21,9 +21,8 @@ const MyRecipesPage = () => {
     const [mealType, setMealType] = useState<string>("");
     const [debouncedQuery, setDebouncedQuery] = useState<string>("");
     const [page, setPage] = useState(1);
-    const [showFilters, setShowFilters] = useState(false);
-    const { data: savedRecipesIdData } = useSavedRecipesId();
-    const { data: createdRecipesData, isFetching } = useCreatedRecipes(
+    const { data: savedRecipeId } = useSavedRecipesId();
+    const { data: ownRecipes, isFetching } = useCreatedRecipes(
         page,
         debouncedQuery,
         mealType,
@@ -42,10 +41,6 @@ const MyRecipesPage = () => {
     useEffect(() => {
         document.title = "Spoonfed | Own Recipes";
     }, []);
-
-    const toggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
 
     return (
         <div className="w-full bg-gray-50 min-h-screen">
@@ -88,13 +83,11 @@ const MyRecipesPage = () => {
             {/* Content */}
             <div className="container mx-auto px-4 mb-24">
                 <SearchAndFilter
-                    placeholder="Search your recipes..."
+                    title="Search Your Recipes"
                     query={query}
                     setQuery={setQuery}
                     setMealType={setMealType}
                     setCuisine={setCuisine}
-                    showFilters={showFilters}
-                    toggleFilters={toggleFilters}
                 />
 
                 {/* Recipe Cards */}
@@ -103,30 +96,26 @@ const MyRecipesPage = () => {
                         loading={isFetching}
                         text="Searching for your recipes..."
                     />
-                ) : createdRecipesData.recipes.length > 0 ? (
+                ) : ownRecipes.recipes.length > 0 ? (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {createdRecipesData.recipes.map(
-                                (recipe: Recipe) => (
-                                    <NavLink
-                                        key={recipe._id}
-                                        to={`/recipe/${recipe._id}`}
-                                    >
-                                        <RecipeCard
-                                            recipe={recipe}
-                                            savedRecipes={savedRecipesIdData}
-                                        />
-                                    </NavLink>
-                                )
-                            )}
+                            {ownRecipes.recipes.map((recipe: Recipe) => (
+                                <NavLink
+                                    key={recipe._id}
+                                    to={`/recipe/${recipe._id}`}
+                                >
+                                    <RecipeCard
+                                        recipe={recipe}
+                                        savedRecipes={savedRecipeId}
+                                    />
+                                </NavLink>
+                            ))}
                         </div>
 
                         <div className="mt-10 flex justify-center">
                             <Pagination
                                 setPage={setPage}
-                                pageCount={
-                                    createdRecipesData.pagination.pageCount
-                                }
+                                pageCount={ownRecipes.pagination.pageCount}
                                 page={page}
                             />
                         </div>

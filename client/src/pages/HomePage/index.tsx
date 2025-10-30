@@ -9,7 +9,6 @@ import SearchAndFilter from "../../components/SearchAndFilter";
 import { Recipe } from "../../types/recipeTypes";
 import ChatWindow from "../../components/ChatWindow";
 import FeaturedRecipeSection from "./FeaturedRecipeSection";
-import NoRecipesFoundSection from "../../components/NoRecipesFoundSection";
 import HeroSection from "../../components/HeroSection";
 import { HashLink } from "react-router-hash-link";
 import { FaArrowRight, FaBookOpen, FaUtensils } from "react-icons/fa6";
@@ -21,7 +20,6 @@ const HomePage = () => {
     const [query, setQuery] = useState<string>("");
     const [cuisine, setCuisine] = useState<string>("");
     const [mealType, setMealType] = useState<string>("");
-    const [showFilters, setShowFilters] = useState(false);
     const [debouncedQuery, setDebouncedQuery] = useState<string>("");
     const [page, setPage] = useState<number>(1);
     const { data: publicRecipesData, isFetching } = usePublicRecipes(
@@ -31,10 +29,6 @@ const HomePage = () => {
         cuisine
     );
     const { data: savedRecipesIdData } = useSavedRecipesId();
-
-    const toggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -122,55 +116,51 @@ const HomePage = () => {
 
                         {/* Search and Filter */}
                         <SearchAndFilter
-                            placeholder="Search for recipes"
                             query={query}
                             setQuery={setQuery}
                             setMealType={setMealType}
                             setCuisine={setCuisine}
-                            showFilters={showFilters}
-                            toggleFilters={toggleFilters}
                         />
                     </div>
 
                     {/* Recipe Grid */}
-                    {isFetching ? (
+                    {isFetching && (
                         <Loader
                             loading={isFetching}
                             text="Searching for recipes..."
                         />
-                    ) : publicRecipesData?.recipes.length > 0 ? (
-                        <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                                {publicRecipesData?.recipes.map(
-                                    (recipe: Recipe) => (
-                                        <NavLink to={`/recipe/${recipe._id}`}>
-                                            <RecipeCard
-                                                recipe={recipe}
-                                                savedRecipes={
-                                                    savedRecipesIdData
-                                                }
-                                            />
-                                        </NavLink>
-                                    )
-                                )}
-                            </div>
-                            <div className="mt-12 flex justify-center">
-                                <Pagination
-                                    setPage={setPage}
-                                    pageCount={
-                                        publicRecipesData?.pagination.pageCount
-                                    }
-                                    page={page}
-                                />
-                            </div>
-                        </>
-                    ) : (
-                        <NoRecipesFoundSection
-                            setQuery={setQuery}
-                            setCuisine={setCuisine}
-                            setMealType={setMealType}
-                        />
                     )}
+                    {publicRecipesData &&
+                        publicRecipesData.recipes.length > 0 && (
+                            <div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+                                    {publicRecipesData?.recipes.map(
+                                        (recipe: Recipe) => (
+                                            <NavLink
+                                                to={`/recipe/${recipe._id}`}
+                                            >
+                                                <RecipeCard
+                                                    recipe={recipe}
+                                                    savedRecipes={
+                                                        savedRecipesIdData
+                                                    }
+                                                />
+                                            </NavLink>
+                                        )
+                                    )}
+                                </div>
+                                <div>
+                                    <Pagination
+                                        setPage={setPage}
+                                        pageCount={
+                                            publicRecipesData?.pagination
+                                                .pageCount
+                                        }
+                                        page={page}
+                                    />
+                                </div>
+                            </div>
+                        )}
                 </div>
             </section>
 

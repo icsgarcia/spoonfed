@@ -70,27 +70,33 @@ const Pagination = ({ setPage, pageCount, page }: PaginationProps) => {
     if (pageCount <= 1) return null;
 
     return (
-        <nav aria-label="Pagination" className="flex justify-center py-8">
-            <div className="inline-flex items-center gap-2 rounded-lg bg-white shadow-sm">
+        <nav
+            aria-label="Pagination"
+            className="flex justify-center py-4 sm:py-8 px-4"
+        >
+            <div className="inline-flex flex-wrap items-center justify-center gap-1 sm:gap-2 rounded-lg bg-white shadow-sm p-2">
+                {/* First Page Button - Hidden on mobile */}
                 <button
                     onClick={handleFirst}
                     disabled={page === 1}
                     aria-label="Go to first page"
-                    className="h-10 w-10 flex items-center justify-center rounded-l-lg text-gray-600 hover:bg-gray-50 hover:text-primary-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
+                    className="hidden sm:flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-l-lg text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
                 >
-                    <FaAnglesLeft className="text-sm" />
+                    <FaAnglesLeft className="text-xs sm:text-sm" />
                 </button>
 
+                {/* Previous Button */}
                 <button
                     onClick={handlePrevious}
                     disabled={page === 1}
                     aria-label="Go to previous page"
-                    className="h-10 w-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:text-primary-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
+                    className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg sm:rounded-none text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
                 >
-                    <FaChevronLeft className="text-sm" />
+                    <FaChevronLeft className="text-xs sm:text-sm" />
                 </button>
 
-                <div className="border-l border-r border-gray-200 px-2 flex items-center">
+                {/* Page Numbers */}
+                <div className="flex items-center gap-1 sm:gap-0 sm:border-l sm:border-r sm:border-gray-200 sm:px-2">
                     {generatePages().map((pageNum, index) => {
                         if (
                             pageNum === "ellipsis-start" ||
@@ -99,7 +105,7 @@ const Pagination = ({ setPage, pageCount, page }: PaginationProps) => {
                             return (
                                 <span
                                     key={`${pageNum}-${index}`}
-                                    className="h-10 w-8 flex items-center justify-center text-gray-400"
+                                    className="hidden sm:flex h-8 w-6 sm:h-10 sm:w-8 items-center justify-center text-gray-400"
                                 >
                                     &hellip;
                                 </span>
@@ -114,10 +120,10 @@ const Pagination = ({ setPage, pageCount, page }: PaginationProps) => {
                                     page === pageNum ? "page" : undefined
                                 }
                                 aria-label={`Page ${pageNum}`}
-                                className={`h-10 w-10 flex items-center justify-center rounded-md mx-0.5 font-medium transition-all ${
+                                className={`h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-md mx-0.5 font-medium text-sm sm:text-base transition-all ${
                                     page === pageNum
-                                        ? "bg-primary-600 text-white shadow-sm"
-                                        : "text-gray-700 hover:bg-gray-100 hover:text-primary-600"
+                                        ? "bg-green-600 text-white shadow-sm"
+                                        : "text-gray-700 hover:bg-gray-100 hover:text-green-600"
                                 }`}
                             >
                                 {pageNum}
@@ -126,22 +132,24 @@ const Pagination = ({ setPage, pageCount, page }: PaginationProps) => {
                     })}
                 </div>
 
+                {/* Next Button */}
                 <button
                     onClick={handleNext}
                     disabled={page === pageCount}
                     aria-label="Go to next page"
-                    className="h-10 w-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:text-primary-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
+                    className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg sm:rounded-none text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
                 >
-                    <FaChevronRight className="text-sm" />
+                    <FaChevronRight className="text-xs sm:text-sm" />
                 </button>
 
+                {/* Last Page Button - Hidden on mobile */}
                 <button
                     onClick={handleLast}
                     disabled={page === pageCount}
                     aria-label="Go to last page"
-                    className="h-10 w-10 flex items-center justify-center rounded-r-lg text-gray-600 hover:bg-gray-50 hover:text-primary-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
+                    className="hidden sm:flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-r-lg text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:cursor-not-allowed"
                 >
-                    <FaAnglesRight className="text-sm" />
+                    <FaAnglesRight className="text-xs sm:text-sm" />
                 </button>
             </div>
         </nav>
