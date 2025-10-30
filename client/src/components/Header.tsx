@@ -5,7 +5,6 @@ import {
     FaBars,
     FaXmark,
     FaHouse,
-    FaCircleInfo,
     FaUtensils,
     FaBookmark,
     FaUserGear,
