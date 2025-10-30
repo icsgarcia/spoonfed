@@ -8,11 +8,13 @@ import dotenv from "dotenv";
 dotenv.config();
 const PORT = process.env.PORT || 3002;
 const MONGODB_URI = process.env.MONGODB_URI as string;
+const LOCAL_CLIENT_URL = process.env.LOCAL_CLIENT_URL || "";
+const CLIENT_URL = process.env.CLIENT_URL || "";
 
 const app: Express = express();
 app.use(express.json());
 
-const allowedOrigins = ["https://spoonfed.vercel.app", "http://localhost:5173"];
+const allowedOrigins = [CLIENT_URL, LOCAL_CLIENT_URL];
 
 app.use(
     cors({
