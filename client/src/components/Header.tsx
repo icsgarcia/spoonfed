@@ -105,20 +105,7 @@ const Header = () => {
                             <FaHouse className="text-xs" />
                             <span>Home</span>
                         </NavLink>
-                        <NavLink
-                            to="/about"
-                            className={({ isActive }) =>
-                                `flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-in-out
-                                ${
-                                    isActive
-                                        ? "bg-primary-600 text-white"
-                                        : "text-gray-700 hover:bg-gray-100"
-                                }`
-                            }
-                        >
-                            <FaCircleInfo className="text-xs" />
-                            <span>About</span>
-                        </NavLink>
+
                         <NavLink
                             to="/recipes"
                             className={({ isActive }) =>
@@ -327,28 +314,6 @@ const Header = () => {
                                 `}
                                 />
                                 <span>Home</span>
-                            </NavLink>
-
-                            <NavLink
-                                to="/about"
-                                className={({ isActive }) =>
-                                    `flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors
-                                    ${
-                                        isActive
-                                            ? "bg-primary-100 text-primary-800 font-medium"
-                                            : "text-gray-700 hover:bg-gray-50"
-                                    }`
-                                }
-                                onClick={() => setIsNavMenuOpen(false)}
-                            >
-                                <FaCircleInfo
-                                    className={`${(isActive: boolean) =>
-                                        isActive
-                                            ? "text-primary-600"
-                                            : "text-gray-500"}
-                                    `}
-                                />
-                                <span>About</span>
                             </NavLink>
 
                             <NavLink

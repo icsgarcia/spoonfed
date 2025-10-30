@@ -14,7 +14,6 @@ import CreateRecipePage from "./pages/CreateRecipePage";
 import UpdateRecipePage from "./pages/UpdateRecipePage";
 import ProfilePage from "./pages/ProfilePage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
-import AboutPage from "./pages/AboutPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
 import ChatProvider from "./context/ChatContext";
@@ -75,15 +74,6 @@ function App() {
                                     element={
                                         <ProtectedRoute>
                                             <HomePage />
-                                        </ProtectedRoute>
-                                    }
-                                />
-
-                                <Route
-                                    path="/about"
-                                    element={
-                                        <ProtectedRoute>
-                                            <AboutPage />
                                         </ProtectedRoute>
                                     }
                                 />
