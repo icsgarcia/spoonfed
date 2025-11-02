@@ -9,9 +9,6 @@ import SearchAndFilter from "../../components/SearchAndFilter";
 import { Recipe } from "../../types/recipeTypes";
 import ChatWindow from "../../components/ChatWindow";
 import FeaturedRecipeSection from "./FeaturedRecipeSection";
-import HeroSection from "../../components/HeroSection";
-import { HashLink } from "react-router-hash-link";
-import { FaArrowRight, FaBookOpen, FaUtensils } from "react-icons/fa6";
 import usePublicRecipes from "../../hooks/usePublicRecipes";
 import useSavedRecipesId from "../../hooks/useSavedRecipesId";
 
@@ -47,45 +44,6 @@ const HomePage = () => {
         <div className="w-full relative bg-gray-50">
             <ChatWindow />
             <Header />
-            <HeroSection bgImage={"images/hero-images/hero3-img.jpeg"}>
-                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full mb-6">
-                    <span className="w-2 h-2 rounded-full bg-secondary-400"></span>
-                    <span className="text-sm font-medium">Welcome Back</span>
-                </div>
-
-                <h2 className="font-dancing-script font-bold text-5xl md:text-6xl lg:text-7xl mb-6 text-white leading-tight drop-shadow-md">
-                    Ready to Create <br className="hidden sm:inline" />
-                    <span className="text-secondary-400">Culinary Magic</span>,
-                    Chef?
-                </h2>
-
-                <p className="text-lg md:text-xl text-white/90 leading-relaxed max-w-2xl mx-auto mb-8">
-                    Welcome back to Spoonfed! Dive into your personal dashboard,
-                    update your favorite recipes, and explore new dishes crafted
-                    just for you. Your next masterpiece awaits!
-                </p>
-
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6">
-                    <HashLink
-                        to={`#${discoverRecipesId}`}
-                        smooth
-                        className="group flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white py-3 px-6 md:px-8 rounded-full transition-all hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <FaBookOpen />
-                        <span className="font-medium">Discover Recipes</span>
-                        <FaArrowRight className="opacity-0 group-hover:opacity-100 -ml-2 group-hover:ml-0 transition-all" />
-                    </HashLink>
-
-                    <NavLink
-                        to={"/my-recipes"}
-                        className="group flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white py-3 px-6 md:px-8 rounded-full transition-all hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <FaUtensils />
-                        <span className="font-medium">My Recipes</span>
-                        <FaArrowRight className="opacity-0 group-hover:opacity-100 -ml-2 group-hover:ml-0 transition-all" />
-                    </NavLink>
-                </div>
-            </HeroSection>
 
             {/* Featured Recipes Section */}
             <section className="bg-white py-12 md:py-20">
